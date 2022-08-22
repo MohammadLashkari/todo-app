@@ -46,7 +46,7 @@ class TodoList with ChangeNotifier {
     notifyListeners();
   }
 
-  void editeTodo(String id, String newTodoDesc) {
+  void editTodo(String id, String newTodoDesc) {
     final newTodos = _state.todos.map(
       (Todo todo) {
         if (todo.id == id) {
