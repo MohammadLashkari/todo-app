@@ -4,37 +4,42 @@ import 'package:provider/provider.dart';
 import '../models/todo_model.dart';
 
 class ShowTodo extends StatelessWidget {
-  const ShowTodo({Key? key}) : super(key: key);
+  final ScrollController scrollController;
+  const ShowTodo({Key? key, required this.scrollController}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     final todos = context.watch<FilteredTodo>().state.filteredTodos;
 
-    return ListView.separated(
-      primary: false,
-      shrinkWrap: true,
-      itemCount: todos.length,
-      separatorBuilder: (BuildContext context, int index) {
-        return const Divider(
-          color: Colors.grey,
-        );
-      },
-      itemBuilder: (BuildContext context, int index) {
-        return Dismissible(
-          key: ValueKey(todos[index].id),
-          background: swipeAction(0),
-          secondaryBackground: swipeAction(1),
-          onDismissed: (_) {
-            context.read<TodoList>().removeTodo(todos[index].id);
-          },
-          confirmDismiss: (_) {
-            return deleteConfirmDialog(context);
-          },
-          child: TodoItem(
-            todo: todos[index],
-          ),
-        );
-      },
+    return Scrollbar(
+      controller: scrollController,
+      thumbVisibility: true,
+      child: ListView.separated(
+        primary: false,
+        shrinkWrap: true,
+        itemCount: todos.length,
+        separatorBuilder: (BuildContext context, int index) {
+          return const Divider(
+            color: Colors.black54,
+          );
+        },
+        itemBuilder: (BuildContext context, int index) {
+          return Dismissible(
+            key: ValueKey(todos[index].id),
+            background: swipeAction(0),
+            secondaryBackground: swipeAction(1),
+            onDismissed: (_) {
+              context.read<TodoList>().removeTodo(todos[index].id);
+            },
+            confirmDismiss: (_) {
+              return deleteConfirmDialog(context);
+            },
+            child: TodoItem(
+              todo: todos[index],
+            ),
+          );
+        },
+      ),
     );
   }
 
@@ -58,6 +63,11 @@ class ShowTodo extends StatelessWidget {
       barrierDismissible: false,
       builder: (context) {
         return AlertDialog(
+          shape: const RoundedRectangleBorder(
+            borderRadius: BorderRadius.all(
+              Radius.circular(32.0),
+            ),
+          ),
           title: const Text('Are you sure ?'),
           content: const Text('Do you really want to delete ?'),
           actions: [
@@ -104,17 +114,23 @@ class _TodoItemState extends State<TodoItem> {
 
   @override
   Widget build(BuildContext context) {
-    return ListTile(
-      leading: Checkbox(
-        value: widget.todo.completed,
-        onChanged: (bool? checked) {
-          context.read<TodoList>().toggleTodo(widget.todo.id);
-        },
+    return Container(
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(15),
       ),
-      onTap: () {
-        editTodo(context);
-      },
-      title: Text(widget.todo.desc),
+      child: ListTile(
+        leading: Checkbox(
+          value: widget.todo.completed,
+          onChanged: (bool? checked) {
+            context.read<TodoList>().toggleTodo(widget.todo.id);
+          },
+        ),
+        onTap: () {
+          editTodo(context);
+        },
+        title: Text(widget.todo.desc),
+      ),
     );
   }
 
@@ -127,6 +143,11 @@ class _TodoItemState extends State<TodoItem> {
         return StatefulBuilder(
           builder: (BuildContext context, StateSetter setState) {
             return AlertDialog(
+              shape: const RoundedRectangleBorder(
+                borderRadius: BorderRadius.all(
+                  Radius.circular(32.0),
+                ),
+              ),
               title: const Text('Edit Todo'),
               content: TextField(
                 controller: textController,

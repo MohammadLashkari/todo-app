@@ -50,7 +50,11 @@ class MyApp extends StatelessWidget {
         debugShowCheckedModeBanner: false,
         title: title,
         theme: ThemeData(
-          primarySwatch: Colors.blue,
+          primarySwatch: Colors.deepPurple,
+          scrollbarTheme: ScrollbarThemeData(
+            thumbColor: MaterialStateProperty.all(Colors.deepPurple),
+            crossAxisMargin: 2,
+          ),
         ),
         home: const TodoPage(),
       ),

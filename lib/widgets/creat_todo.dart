@@ -20,15 +20,28 @@ class _CreateTodoState extends State<CreateTodo> {
 
   @override
   Widget build(BuildContext context) {
-    return TextField(
-      controller: newTodoController,
-      decoration: const InputDecoration(labelText: 'What to do?'),
-      onSubmitted: (String? todoDesc) {
-        if (todoDesc != null && todoDesc.trim().isNotEmpty) {
-          context.read<TodoList>().addTodo(todoDesc);
-          newTodoController.clear();
-        }
-      },
+    return Material(
+      elevation: 20.0,
+      child: TextField(
+        controller: newTodoController,
+        decoration: InputDecoration(
+          labelText: 'Add a new todo item',
+          filled: true,
+          fillColor: Colors.grey[300],
+          floatingLabelStyle: const TextStyle(fontSize: 17),
+          suffixIcon: Icon(
+            Icons.note_add_rounded,
+            size: 35,
+            color: Colors.deepPurple[400],
+          ),
+        ),
+        onSubmitted: (String? todoDesc) {
+          if (todoDesc != null && todoDesc.trim().isNotEmpty) {
+            context.read<TodoList>().addTodo(todoDesc);
+            newTodoController.clear();
+          }
+        },
+      ),
     );
   }
 }

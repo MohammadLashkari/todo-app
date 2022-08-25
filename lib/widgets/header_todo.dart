@@ -11,9 +11,10 @@ class TodoHeader extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: <Widget>[
         const Text(
-          'ToDo',
+          'To-Do',
           style: TextStyle(
             fontSize: 40,
+            color: Colors.deepPurple,
           ),
         ),
         Text(
