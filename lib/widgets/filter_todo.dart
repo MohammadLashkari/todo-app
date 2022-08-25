@@ -38,7 +38,7 @@ class FiltersTodo extends StatelessWidget {
   }
 
   Color? buttonColor(BuildContext context, Filter filter) {
-    final currentFilter = context.watch<TodoFilter>().state.filter;
+    final currentFilter = context.watch<TodoFilterState>().filter;
     return currentFilter == filter ? Colors.deepPurple : Colors.black38;
   }
 }

@@ -9,7 +9,7 @@ class ShowTodo extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final todos = context.watch<FilteredTodo>().state.filteredTodos;
+    final todos = context.watch<FilteredTodoState>().filteredTodos;
 
     return Scrollbar(
       controller: scrollController,

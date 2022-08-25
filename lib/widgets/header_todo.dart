@@ -18,7 +18,7 @@ class TodoHeader extends StatelessWidget {
           ),
         ),
         Text(
-          '${context.watch<ActiveTodoCount>().state.activetodoCount} items left',
+          '${context.watch<ActiveTodoCountState>().activetodoCount} items left',
           style: const TextStyle(
             fontSize: 20,
             color: Colors.redAccent,

@@ -1,9 +1,8 @@
 import 'package:equatable/equatable.dart';
+import 'package:state_notifier/state_notifier.dart';
+import 'package:todo/providers/providers.dart';
 
 import '../models/todo_model.dart';
-import 'todo_filter.dart';
-import 'todo_list.dart';
-import 'todo_search.dart';
 
 class FilteredTodoState extends Equatable {
   final List<Todo> filteredTodos;
@@ -28,41 +27,38 @@ class FilteredTodoState extends Equatable {
   }
 }
 
-class FilteredTodo {
-  final TodoFilter todoFilter;
-  final TodoSearch todoSearch;
-  final TodoList todoList;
-  FilteredTodo({
-    required this.todoFilter,
-    required this.todoSearch,
-    required this.todoList,
-  });
+class FilteredTodo extends StateNotifier<FilteredTodoState> with LocatorMixin {
+  FilteredTodo() : super(FilteredTodoState.initial());
 
-  FilteredTodoState get state {
+  @override
+  void update(Locator watch) {
+    final Filter filter = watch<TodoFilterState>().filter;
+    final String searchTerm = watch<TodoSearchState>().searchTerm;
+
+    final List<Todo> todos = watch<TodoListState>().todos;
+
     List<Todo> filterTodo;
 
-    switch (todoFilter.state.filter) {
+    switch (filter) {
       case Filter.active:
-        filterTodo =
-            todoList.state.todos.where((Todo todo) => !todo.completed).toList();
+        filterTodo = todos.where((Todo todo) => !todo.completed).toList();
         break;
 
       case Filter.completed:
-        filterTodo =
-            todoList.state.todos.where((Todo todo) => todo.completed).toList();
+        filterTodo = todos.where((Todo todo) => todo.completed).toList();
         break;
       case Filter.all:
-        filterTodo = todoList.state.todos;
+        filterTodo = todos;
         break;
     }
 
-    if (todoSearch.state.searchTerm.isNotEmpty) {
+    if (searchTerm.isNotEmpty) {
       filterTodo = filterTodo
-          .where((Todo todo) =>
-              todo.desc.toLowerCase().contains(todoSearch.state.searchTerm))
+          .where((Todo todo) => todo.desc.toLowerCase().contains(searchTerm))
           .toList();
     }
 
-    return FilteredTodoState(filteredTodos: filterTodo);
+    state = state.copyWith(filteredTodos: filterTodo);
+    super.update(watch);
   }
 }
